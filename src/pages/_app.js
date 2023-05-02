@@ -13,6 +13,8 @@ export default function App({ Component, pageProps }) {
   const [signer, setSigner] = useState();
 
   const connectToContract = async () => {
+    if (window.ethereum) {
+   
     const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
     await provider.send("eth_requestAccounts", []);
 
@@ -40,15 +42,17 @@ export default function App({ Component, pageProps }) {
       abi.abi,
       signer
     );
+    
     setProvider(ProjectFactoryContract);
+       
+  } else {
+      console.log("Metamask not installed")
+  }
   };
 
   useEffect(() => {
-    window.ethereum.on("accountsChanged", () => {
-      window.location.reload();
-    });
-
     connectToContract();
+
   }, [userAddress]);
 
   return (
